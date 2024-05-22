@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   mynewpackage:
-    path: C:\Users\najib\StudioProjects\mynewpackage
+    path: /Users/aswinvshaji/Documents/Git/package_test
   get: ^4.6.6
 
 

@@ -156,7 +156,9 @@ class RestaurantsAndDishesListingView
                         padding: const EdgeInsets.all(8.0),
                         child: InkWell(
                           onTap: () {},
-                          child: const DishCard(),
+                          child: DishCard(
+                            index: index,
+                          ),
                         ),
                       );
                     },
@@ -171,91 +173,185 @@ class RestaurantsAndDishesListingView
   }
 }
 
-class DishCard extends StatelessWidget {
+class DishCard extends StatefulWidget {
+  final int index;
   const DishCard({
     super.key,
+    required this.index,
   });
+
+  @override
+  State<DishCard> createState() => _DishCardState();
+}
+
+class _DishCardState extends State<DishCard> {
+  int _count = 0;
+
+  void _incrementCount() {
+    setState(() {
+      _count++;
+    });
+  }
+
+  void _decrementCount() {
+    setState(() {
+      if (_count > 0) _count--;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: AppColors.backgroundColor,
-        child: Card(
-            color: AppColors.white,
-            surfaceTintColor: AppColors.white,
-            child: Column(
+      color: AppColors.backgroundColor,
+      child: Card(
+        color: AppColors.white,
+        surfaceTintColor: AppColors.white,
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(15),
-                            bottomLeft: Radius.circular(15)),
-                        child: CommonImageView(
-                          imagePath:
-                              "packages/mynewpackage/${Assets.imagesEggChilly}",
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Egg Friend Rice",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          const Text("₹200"),
-                          Chip(
-                            label: Row(
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    bottomLeft: Radius.circular(15),
+                  ),
+                  child: CommonImageView(
+                    imagePath:
+                        "packages/mynewpackage/${Assets.imagesEggChilly}",
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Egg Friend Rice",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      const Text("₹200"),
+                      Chip(
+                        label: Row(
+                          children: [
+                            CommonImageView(
+                              svgPath:
+                                  "packages/mynewpackage/${Assets.iconsStar}",
+                            ),
+                            const Text(
+                              "4.5(7k+)",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        side: BorderSide(color: AppColors.borderColor),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 CommonImageView(
-                                    svgPath:
-                                        "packages/mynewpackage/${Assets.iconsStar}"),
-                                const Text("4.5(7k+)",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 12)),
+                                  svgPath:
+                                      "packages/mynewpackage/${Assets.iconsShopIcon}",
+                                ),
+                                const SizedBox(width: 5),
+                                Text(
+                                  "Food Hunt",
+                                  style: TextStyle(
+                                      color: AppColors.textLightColor),
+                                ),
                               ],
                             ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (_count == 0)
+                                  IconButton(
+                                    icon: CommonImageView(
+                                      svgPath:
+                                          "packages/mynewpackage/${Assets.iconsAddIcon}",
+                                    ),
+                                    onPressed: _incrementCount,
+                                  ),
+                                if (_count > 0) ...[
+                                  // Chip(
+                                  //   shape: RoundedRectangleBorder(
+                                  //     borderRadius: BorderRadius.circular(50.0),
+                                  //     side:
+                                  //         const BorderSide(color: Colors.grey),
+                                  //   ),
+                                  //   backgroundColor: AppColors.primaryColor,
+                                  //   label: ,
+                                  // ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(50),
+                                      color: AppColors.primaryColor,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15, vertical: 8),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          InkWell(
+                                            onTap: _incrementCount,
+                                            child: const Icon(
+                                                size: 20,
+                                                Icons.add,
+                                                color: Colors.white),
+                                          ),
+                                          const SizedBox(
+                                            width: 8,
+                                          ),
+                                          Text(
+                                            '$_count',
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                          const SizedBox(
+                                            width: 8,
+                                          ),
+                                          InkWell(
+                                            onTap: _decrementCount,
+                                            child: const Icon(
+                                                size: 20,
+                                                Icons.remove,
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ],
                             ),
-                            side: BorderSide(color: AppColors.borderColor),
-                          ),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CommonImageView(
-                                  svgPath:
-                                      "packages/mynewpackage/${Assets.iconsShopIcon}"),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                "Food Hunt",
-                                style:
-                                    TextStyle(color: AppColors.textLightColor),
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * .15,
-                              ),
-                              CommonImageView(
-                                  svgPath:
-                                      "packages/mynewpackage/${Assets.iconsAddIcon}"),
-                            ],
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    )
-                  ],
-                )
+                    ],
+                  ),
+                ),
               ],
-            )));
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
