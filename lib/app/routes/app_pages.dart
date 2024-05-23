@@ -28,7 +28,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.RESTAURANTS_DETAILS,
-      page: () => const RestaurantsDetailsView(),
+      page: () => const RestaurantsDetailsView(restaurantId: '',),
       binding: RestaurantsDetailsBinding(),
     ),
   ];

@@ -1,15 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:mynewpackage/app/authentication/authentication_repo.dart';
-import 'package:mynewpackage/app/authentication/authentication_service.dart';
 import 'package:mynewpackage/app/authentication/model/authentication_request_model.dart';
-import 'package:mynewpackage/app/modules/home/views/home_view.dart';
+import 'package:mynewpackage/app/authentication/model/create_user_request_model.dart';
+import 'package:mynewpackage/app/modules/home/data/home_repository.dart';
 import 'package:mynewpackage/storage/storage.dart';
 
 import '../../../../app_colors.dart';
 import '../../../../generated/assets.dart';
 import '../../../../widgets/common_Image_view.dart';
+import '../data/models/service_category_response.dart';
 
 class HomeController extends GetxController {
   //TODO: Implement HomeController
@@ -42,23 +43,24 @@ class HomeController extends GetxController {
     "67/8, 4th cross Road, Lavella Road,  Bengaluru,Karnataka 560001, India",
     "No. 63, 1st Floor, 14th Cross, 9th Main Road,Indiranagar, Bengaluru, Karnataka 560038, India"
   ];
-  RxString address = ''.obs;
+  RxString address = '"No. 63, 1st Floor, 14th Cross, 9th Main Road,Indiranagar, Bengaluru, Karnataka 560038, India"'.obs;
   RxBool isLoading = false.obs;
   AppStorage storage = AppStorage();
   AuthRepository authRepository = Get.put(AuthRepository());
-  String clientId = "";
-  String clientSecrete = "";
+  HomeRepository homeRepository = Get.put(HomeRepository());
+   RxList<ServiceCategories> serviceList = List<ServiceCategories>.empty(growable: true).obs;
+
+
 
 
 
   @override
   void onInit() {
-    authenticate();
     debugPrint("hi");
     super.onInit();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      showAddressSelectionBottomSheet(context: Get.context!);
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   showAddressSelectionBottomSheet(context: Get.context!);
+    // });
   }
 
   @override
@@ -142,27 +144,94 @@ class HomeController extends GetxController {
     );
   }
 
-  void authenticate() async {
-    debugPrint("inside");
+  void authenticate({required String clientId,required String clientSecrete}) async {
     isLoading(true);
+    debugPrint("before api call${isLoading.value}");
+
 
     AuthenticationRequestModel requestModel = AuthenticationRequestModel(
         clientId:clientId, clientSecrete:clientSecrete
     );
 
-    authRepository.authenticate(requestModel.toJson()).then((value) {
-      debugPrint("authenticated");
+    var result = await InternetConnectionChecker().hasConnection;
+
+    if(result == true){
+      await authRepository.authenticate(requestModel.toJson()).then((value) {
+        if (value.status == 200) {
+          isLoading(false);
+
+          debugPrint("after success${isLoading.value}");
+
+
+          debugPrint("authenticated");
+          debugPrint("${value.message}");
+          debugPrint("token${value.data?.refreshToken}");
+          storage.writeAccessToken(value.data?.accessToken ?? "");
+          debugPrint("access token ${storage.getAccessToken()}");
+          storage.writeRefreshToken(value.data?.refreshToken ?? "");
+          storage.writeIsAuthenticated(true);
+          createUser();
+          getServices();
+
+        } else {
+          debugPrint("after failure${value.message}");
+
+          ScaffoldMessenger.of(Get.context!).showSnackBar(
+              SnackBar(content: Text("${value.message}",), backgroundColor: Colors.red,));
+        }
+      });
+    }else{
+      ScaffoldMessenger.of(Get.context!).showSnackBar(
+          const SnackBar(content: Text("No Internet",), backgroundColor: Colors.red,));
+    }
+  }
+
+  void createUser() async {
+    isLoading(true);
+    debugPrint("before api call${isLoading.value}");
+
+    CreateUserRequestModel requestModel = CreateUserRequestModel(
+      phoneNumber: "21341232",phoneCode: "12234"
+    );
+
+
+
+   await authRepository.createUser(requestModel.toJson()).then((value) {
       if (value.status == 200) {
-        debugPrint("authenticated");
-        storage.writeAccessToken(value.data?.accessToken ?? "");
-        storage.writeRefreshToken(value.data?.refreshToken ?? "");
-      } else {
-        debugPrint("false");
         isLoading(false);
+
+        debugPrint("after success${isLoading.value}");
+
+
+        debugPrint("authenticated");
+        debugPrint("${value.message}");
+        storage.writeUserId(value.data?.id ?? "");
+      } else {
+
+        debugPrint("after failure${value.message}");
+
         ScaffoldMessenger.of(Get.context!).showSnackBar(
-            SnackBar(content: Text(value.message ?? "")));
+            SnackBar(content: Text(value.message.toString(),),backgroundColor: Colors.red,));
       }
     });
   }
+
+
+  void getServices() async {
+    isLoading(true);
+    await homeRepository.getServiceList().then((value) {
+      if (value.data?.serviceCategories != [] && (value.status == 200)) {
+
+        serviceList.addAll(value.data?.serviceCategories ?? []);
+        debugPrint("list service ${serviceList.first.categoryName}");
+        isLoading(false);
+      } else {
+        isLoading(false);
+        getServices();
+      }
+    });
+  }
+
+
 
 }

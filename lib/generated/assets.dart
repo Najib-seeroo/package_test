@@ -51,7 +51,11 @@ class Assets {
   static const String libSizeUtils = 'lib/size_utils.dart';
   static const String localesEnUS = 'lib/assets/locales/en_US.json';
   static const String modelAuthenticationRequestModel = 'lib/app/authentication/model/authentication_request_model.dart';
+  static const String modelAuthenticationResponse = 'lib/app/authentication/model/authentication_response.dart';
+  static const String modelCreateUserRequestModel = 'lib/app/authentication/model/create_user_request_model.dart';
+  static const String modelCreateUserResponse = 'lib/app/authentication/model/create_user_response.dart';
   static const String modelRefreshTokenModel = 'lib/model/refresh_token_model.dart';
+  static const String modelsServiceCategoryResponse = 'lib/app/modules/home/data/models/service_category_response.dart';
   static const String routesAppPages = 'lib/app/routes/app_pages.dart';
   static const String routesAppRoutes = 'lib/app/routes/app_routes.dart';
   static const String servicesApiService = 'lib/services/api_service.dart';
@@ -61,5 +65,7 @@ class Assets {
   static const String viewsRestaurantsAndDishesListingView = 'lib/app/modules/restaurants_and_dishes_listing/views/restaurants_and_dishes_listing_view.dart';
   static const String viewsRestaurantsDetailsView = 'lib/app/modules/restaurants_details/views/restaurants_details_view.dart';
   static const String widgetsCommonImageView = 'lib/widgets/common_Image_view.dart';
+  static const String widgetsLoadingView = 'lib/widgets/loading_view.dart';
+  static const String widgetsPleaseWaitDialogue = 'lib/widgets/please_wait_dialogue.dart';
 
 }

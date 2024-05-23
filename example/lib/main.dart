@@ -4,10 +4,12 @@ import 'package:mynewpackage/dependecy.dart';
 import 'package:mynewpackage/mynewpackage.dart';
 
 
+
 void main() async{
   await DependencyCreator.init();
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
