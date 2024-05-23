@@ -4,14 +4,10 @@ library mynewpackage;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mynewpackage/app/authentication/authentication_repo.dart';
 import 'package:mynewpackage/app/modules/home/views/home_view.dart';
 import 'package:mynewpackage/app/modules/restaurants_and_dishes_listing/views/restaurants_and_dishes_listing_view.dart';
 import 'package:mynewpackage/app/routes/app_pages.dart';
-import 'package:mynewpackage/services/api_service.dart';
-import 'package:mynewpackage/storage/storage.dart';
 
-import 'app/authentication/authentication_service.dart';
 import 'app/modules/home/controllers/home_controller.dart';
 import 'app/modules/restaurants_and_dishes_listing/controllers/restaurants_and_dishes_listing_controller.dart';
 import 'dependecy.dart';

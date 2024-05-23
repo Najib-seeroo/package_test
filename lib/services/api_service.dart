@@ -8,7 +8,6 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import '../model/refresh_token_model.dart';
 import '../storage/storage.dart';
 
-
 enum Method { POST, GET, PUT, DELETE, PATCH }
 
 class ApiService extends GetConnect implements GetxService {
@@ -33,8 +32,8 @@ class ApiService extends GetConnect implements GetxService {
 
   Future<Response> reqst(
       {required String url,
-        Method? method = Method.POST,
-        Map<String, dynamic>? params}) async {
+      Method? method = Method.POST,
+      Map<String, dynamic>? params}) async {
     debugPrint("base url $baseUrl");
     Response response;
     try {
@@ -85,6 +84,7 @@ class ApiService extends GetConnect implements GetxService {
         throw Exception("No Internet Connection");
       }
     } on SocketException catch (e) {
+      log("Error = $e");
       throw Exception("No Internet Connection");
     } on FormatException {
       throw Exception("Bad Response Format!");
@@ -100,7 +100,7 @@ class ApiService extends GetConnect implements GetxService {
   }
 
   updateHeaders() {
-    _headers['Authorization'] ="Bearer ${storage.getAccessToken()}";
+    _headers['Authorization'] = "Bearer ${storage.getAccessToken()}";
   }
 
   Future<Response> refreshTokenApi(
@@ -119,12 +119,9 @@ class ApiService extends GetConnect implements GetxService {
       return showingExpiryDialog
           ? Response()
           : Response(
-        body: {
-          'status': false,
-          'message': "Server Error"
-        },
-        statusCode: 500,
-      );
+              body: {'status': false, 'message': "Server Error"},
+              statusCode: 500,
+            );
     }
 
     if (res.statusCode == 200) {
@@ -139,12 +136,8 @@ class ApiService extends GetConnect implements GetxService {
           res = await reqst(url: path, method: Method.GET);
           debugPrint('status code : ${res.statusCode}');
         } catch (e) {
-          return
-               Response(
-            body: {
-              'status': false,
-              'message': "Server Errorr"
-            },
+          return Response(
+            body: {'status': false, 'message': "Server Errorr"},
             statusCode: 500,
           );
         }
@@ -158,26 +151,17 @@ class ApiService extends GetConnect implements GetxService {
           );
           debugPrint('status code : ${res.statusCode}');
         } catch (e) {
-          return
-               Response(
-            body: {
-              'status': false,
-              'message': "Server Error"
-            },
+          return Response(
+            body: {'status': false, 'message': "Server Error"},
             statusCode: 500,
           );
         }
         return res;
       }
     }
-    return
-         Response(
-      body: {
-        'status': false,
-        'message': "Server Error"
-      },
+    return Response(
+      body: {'status': false, 'message': "Server Error"},
       statusCode: 500,
     );
   }
-
 }

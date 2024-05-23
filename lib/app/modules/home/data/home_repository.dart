@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:mynewpackage/app/authentication/model/create_user_response.dart';
 import 'package:mynewpackage/app/modules/home/data/home_service.dart';
 
 import '../../../../services/api_service.dart';

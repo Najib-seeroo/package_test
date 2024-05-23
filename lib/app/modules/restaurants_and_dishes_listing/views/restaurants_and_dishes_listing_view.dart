@@ -1,6 +1,8 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
@@ -12,16 +14,13 @@ import '../../../../generated/assets.dart';
 import '../../../../widgets/common_Image_view.dart';
 import '../controllers/restaurants_and_dishes_listing_controller.dart';
 
-
-
-
-class RestaurantsAndDishesListingView
-    extends StatelessWidget {
+class RestaurantsAndDishesListingView extends StatelessWidget {
   RestaurantsAndDishesListingView({super.key});
 
   final HomeController homeController = Get.put(HomeController());
 
-  final RestaurantsAndDishesListingController controller = Get.put(RestaurantsAndDishesListingController());
+  final RestaurantsAndDishesListingController controller =
+      Get.put(RestaurantsAndDishesListingController());
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -162,7 +161,10 @@ class RestaurantsAndDishesListingView
                         child: InkWell(
                           onTap: () {},
                           child: DishCard(
+                            dishName: "Egg Friend Rice",
                             index: index,
+                            price: "200",
+                            rating: 4.5,
                           ),
                         ),
                       );
@@ -179,10 +181,16 @@ class RestaurantsAndDishesListingView
 }
 
 class DishCard extends StatefulWidget {
+  final String dishName;
+  final String price;
+  final double rating;
   final int index;
   const DishCard({
     super.key,
     required this.index,
+    required this.dishName,
+    required this.price,
+    required this.rating,
   });
 
   @override
@@ -226,129 +234,126 @@ class _DishCardState extends State<DishCard> {
                         "packages/mynewpackage/${Assets.imagesEggChilly}",
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Egg Friend Rice",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Wrap Text with Expanded to prevent overflow
+                        Text(
+                          widget.dishName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          overflow: TextOverflow.ellipsis, // Add ellipsis
+                          maxLines: 1, // Limit to one line
                         ),
-                      ),
-                      const SizedBox(height: 5),
-                      const Text("₹200"),
-                      Chip(
-                        label: Row(
-                          children: [
-                            CommonImageView(
-                              svgPath:
-                                  "packages/mynewpackage/${Assets.iconsStar}",
-                            ),
-                            const Text(
-                              "4.5(7k+)",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12,
+                        const SizedBox(height: 5),
+                        Text("₹${widget.price}"),
+                        Chip(
+                          label: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CommonImageView(
+                                svgPath:
+                                    "packages/mynewpackage/${Assets.iconsStar}",
                               ),
-                            ),
-                          ],
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        side: BorderSide(color: AppColors.borderColor),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                CommonImageView(
-                                  svgPath:
-                                      "packages/mynewpackage/${Assets.iconsShopIcon}",
+                              Text(
+                                widget.rating.toString(),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
                                 ),
-                                const SizedBox(width: 5),
-                                Text(
-                                  "Food Hunt",
-                                  style: TextStyle(
-                                      color: AppColors.textLightColor),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (_count == 0)
-                                  IconButton(
-                                    icon: CommonImageView(
-                                      svgPath:
-                                          "packages/mynewpackage/${Assets.iconsAddIcon}",
-                                    ),
-                                    onPressed: _incrementCount,
+                              ),
+                            ],
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          side: BorderSide(color: AppColors.borderColor),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  CommonImageView(
+                                    svgPath:
+                                        "packages/mynewpackage/${Assets.iconsShopIcon}",
                                   ),
-                                if (_count > 0) ...[
-                                  // Chip(
-                                  //   shape: RoundedRectangleBorder(
-                                  //     borderRadius: BorderRadius.circular(50.0),
-                                  //     side:
-                                  //         const BorderSide(color: Colors.grey),
-                                  //   ),
-                                  //   backgroundColor: AppColors.primaryColor,
-                                  //   label: ,
-                                  // ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(50),
-                                      color: AppColors.primaryColor,
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 15, vertical: 8),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          InkWell(
-                                            onTap: _incrementCount,
-                                            child: const Icon(
-                                                size: 20,
-                                                Icons.add,
-                                                color: Colors.white),
-                                          ),
-                                          const SizedBox(
-                                            width: 8,
-                                          ),
-                                          Text(
-                                            '$_count',
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                          ),
-                                          const SizedBox(
-                                            width: 8,
-                                          ),
-                                          InkWell(
-                                            onTap: _decrementCount,
-                                            child: const Icon(
-                                                size: 20,
-                                                Icons.remove,
-                                                color: Colors.white),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    "Food Hunt",
+                                    style: TextStyle(
+                                        color: AppColors.textLightColor),
+                                  ),
                                 ],
-                              ],
-                            ),
-                          ],
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (_count == 0)
+                                    IconButton(
+                                      icon: CommonImageView(
+                                        svgPath:
+                                            "packages/mynewpackage/${Assets.iconsAddIcon}",
+                                      ),
+                                      onPressed: _incrementCount,
+                                    ),
+                                  if (_count > 0) ...[
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: AppColors.primaryColor,
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15, vertical: 8),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            InkWell(
+                                              onTap: _incrementCount,
+                                              child: const Icon(
+                                                  size: 20,
+                                                  Icons.add,
+                                                  color: Colors.white),
+                                            ),
+                                            const SizedBox(
+                                              width: 8,
+                                            ),
+                                            Text(
+                                              '$_count',
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            const SizedBox(
+                                              width: 8,
+                                            ),
+                                            InkWell(
+                                              onTap: _decrementCount,
+                                              child: const Icon(
+                                                  size: 20,
+                                                  Icons.remove,
+                                                  color: Colors.white),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -377,7 +382,9 @@ class RestaurantList extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: InkWell(
             onTap: () {
-              Get.to(const RestaurantsDetailsView());
+              Get.to(const RestaurantsDetailsView(
+                restaurantId: "6641acefe25729974b4268a0",
+              ));
             },
             child: Container(
                 color: AppColors.backgroundColor,
